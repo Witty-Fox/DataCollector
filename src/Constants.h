@@ -1,0 +1,14 @@
+// Universal Constants
+#define DEFAULT_MAX_ADC_VALUE 4096
+#define DEFAULT_MAX_VOLTAGE_VALUE 3.3
+
+// LDR Constants
+#define DEFAULT_LDR_RES_VALUE 10000
+#define DEFAULT_LUX_SCALE_VALUE 12518931
+#define DEFAULT_LUX_EXP_VALUE -1.405
+
+// Thermistor Constants
+#define DEFAULT_THERM_RES_VALUE 10000
+
+// OPT3001 Constants
+#define DEFAULT_OPT_ADDR 0x44

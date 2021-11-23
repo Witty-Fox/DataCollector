@@ -11,10 +11,14 @@ void setup()
 void loop() 
 {
   int thermistor_reading = thermistor.readRaw();               // Reading raw values from thermistor
-  int thermistor_readingC = thermistor.readTemp();             // Calculating temperature values from thermistor in Celsius
-  int thermistor_readingF = thermistor.readTemp(TEMP_F);       // Calculating temperature values from thermistor in Fahrenheit
+  int thermistor_readingC = thermistor.readTemperature();      // Calculating temperature values from thermistor in Celsius
+  int thermistor_readingF = thermistor.readTemperature(TEMP_F);// Calculating temperature values from thermistor in Fahrenheit
+  Serial.print("Raw Value: ");
   Serial.println(thermistor_reading);                          // Printing raw values from thermistor
-  Serial.println(thermistor_readingC);                         // Printing temperature values from thermistor in Celsius
+  Serial.print("Temperature in Celsius: ");
+  Serial.print(thermistor_readingC);                           // Printing temperature values from thermistor in Celsius
+  Serial.print("\t\tTemperature in Fahrenheit: ");
   Serial.println(thermistor_readingF);                         // Printing temperature values from thermistor in Fahrenheit
+  Serial.println();                                            // Printing an empty line
   delay(100);                                                  // adding delay of 100 ms between each loop
 }

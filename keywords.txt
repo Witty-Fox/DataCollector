@@ -1,3 +1,15 @@
-DataCollector KEYWORD1
+DataCollector   KEYWORD1
+DataCollector_LDR   KEYWORD1
+DataCollector_Thermistor    KEYWORD1
+DataCollector_Si7021    KEYWORD1
+DataCollector_OPT3001    KEYWORD1
+
 begin    KEYWORD2
+setMaxAdc   KEYWORD2
 readRaw     KEYWORD2
+readLux    KEYWORD2
+readTemperature    KEYWORD2
+setRefVoltage   KEYWORD2
+setLuxCalcScalar    KEYWORD2
+setLuxCalcExp   KEYWORD2
+readHumidity     KEYWORD2
