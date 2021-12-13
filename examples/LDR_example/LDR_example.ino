@@ -4,7 +4,7 @@ DataCollector_LDR ldr;                  // Creating LDR object
 
 void setup() 
 {
-  ldr.begin(33);                        // Initializing LDR object
+  ldr.begin(13);                        // Initializing LDR object
   Serial.begin(115200);                 // Initializing serial port
 }
 

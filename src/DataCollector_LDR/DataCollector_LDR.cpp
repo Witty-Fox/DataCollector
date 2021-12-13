@@ -9,6 +9,7 @@ void DataCollector_LDR::begin(int pin, int res)
     _refVoltage = DEFAULT_MAX_VOLTAGE_VALUE;
     _luxCalcScalar = DEFAULT_LUX_SCALE_VALUE;
     _luxCalcExp = DEFAULT_LUX_EXP_VALUE;
+    _publishFormat = DEFAULT_LDR_PUBLISH_FORMAT;
 }
 
 void DataCollector_LDR::begin(int pin, int res, int maxAdc, int voltage, int scalar, int exp)
@@ -62,4 +63,19 @@ float DataCollector_LDR::readLux()
     ldrResistance = ldrVoltage / resistorVoltage * _res;
     ldrLux = _luxCalcScalar * pow(ldrResistance, _luxCalcExp);
     return ldrLux;
+}
+
+void DataCollector_LDR::setPublishMode(LightFormat format)
+{
+    _publishFormat = format;
+}
+
+float DataCollector_LDR::publish()
+{
+    return (_publishFormat == LIGHT_LUX) ? readLux() : readRaw();
+}
+
+String DataCollector_LDR::prettyPublish()
+{
+    return (_publishFormat == LIGHT_LUX) ? "LDR (lux): " + String(readLux()) : "LDR (raw): " + String(readRaw());
 }

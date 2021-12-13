@@ -33,13 +33,18 @@ int DataCollector_Thermistor::readRaw()
     return analogRead(_pin);
 }
 
-float DataCollector_Thermistor::readTemperature(TemperatureFormat format)
+float DataCollector_Thermistor::readTemperature()
 {
     if (_res == 0)
     {
         return -1;
     }
     int raw = readRaw();
+
+    if (_temperatureFormat == TEMP_RAW)
+    {
+        return raw;
+    }
 
     // calculating temperature using res
     double output_voltage, thermistor_resistance, therm_res_ln, temperature;
@@ -49,12 +54,31 @@ float DataCollector_Thermistor::readTemperature(TemperatureFormat format)
     temperature = (1 / (0.001129148 + (0.000234125 * therm_res_ln) + (0.0000000876741 * therm_res_ln * therm_res_ln * therm_res_ln))); /* Temperature in Kelvin */
     float temp_cel = temperature - 273.15;                                                                                             /* Temperature in degree Celsius */
 
-    if (format == TEMP_C)
+    return (_temperatureFormat == TEMP_C) ? temp_cel : cToF(temp_cel);
+}
+
+void DataCollector_Thermistor::setTemperatureFormat(TemperatureFormat format)
+{
+    _temperatureFormat = format;
+}
+
+float DataCollector_Thermistor::publish()
+{
+    return (_temperatureFormat == TEMP_RAW) ? readRaw() : readTemperature();
+}
+
+String DataCollector_Thermistor::prettyPublish()
+{
+    if (_temperatureFormat == TEMP_C)
     {
-        return temp_cel;
+        return "Thermistor temperature (C): " + String(readTemperature());
     }
-    else if (format == TEMP_F)
+    else if (_temperatureFormat == TEMP_F)
     {
-        return ((temp_cel * 1.8) + 32);
+        return "Thermistor temperature (F): " + String(readTemperature());
+    }
+    else 
+    {
+        return "Thermistor (raw): " + String(readRaw());
     }
 }

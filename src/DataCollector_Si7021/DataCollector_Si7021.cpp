@@ -12,17 +12,17 @@ int DataCollector_Si7021::begin()
     }
 }
 
-float DataCollector_Si7021::readTemperature(TemperatureFormat format)
+float DataCollector_Si7021::readTemperature()
 {
     float temp = _sensor.readTemperature();
 
-    if (format == TEMP_C)
+    if (_temperatureFormat == TEMP_F)
+    {
+        return (cToF(temp));
+    }
+    else
     {
         return (temp);
-    }
-    else if (format == TEMP_F)
-    {
-        return ((temp * 1.8) + 32);
     }
 }
 
@@ -41,3 +41,30 @@ float DataCollector_Si7021::readHumidity()
 //         return 0;
 //     }
 // }
+
+void DataCollector_Si7021::setTemperatureFormat(TemperatureFormat format)
+{
+    _temperatureFormat = format;
+}
+
+void DataCollector_Si7021::setPublishMode(Si7021PublishMode publishMode)
+{
+    _publishMode = publishMode;
+}
+
+float DataCollector_Si7021::publish()
+{
+    return (_publishMode == TEMPERATURE) ? readTemperature() : readHumidity();
+}
+
+String DataCollector_Si7021::prettyPublish()
+{
+    if (_publishMode == TEMPERATURE)
+    {
+        return "Si7021 temperature : " + String(readTemperature());
+    }
+    else
+    {
+        return "Si7021 humidity : " + String(readHumidity());
+    }
+}
