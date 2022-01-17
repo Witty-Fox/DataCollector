@@ -12,7 +12,7 @@ void DataCollector_LDR::begin(int pin, int res)
     _publishFormat = DEFAULT_LDR_PUBLISH_FORMAT;
 }
 
-void DataCollector_LDR::begin(int pin, int res, int maxAdc, int voltage, int scalar, int exp)
+void DataCollector_LDR::begin(int pin, int res, int maxAdc, int voltage, float scalar, float exp)
 {
     pinMode(pin, INPUT);
     _pin = pin;
@@ -38,12 +38,12 @@ void DataCollector_LDR::setRefVoltage(int voltage)
     _refVoltage = voltage;
 }
 
-void DataCollector_LDR::setLuxCalcScalar(int scalar)
+void DataCollector_LDR::setLuxCalcScalar(float scalar)
 {
     _luxCalcScalar = scalar;
 }
 
-void DataCollector_LDR::setLuxCalcExp(int exp)
+void DataCollector_LDR::setLuxCalcExp(float exp)
 {
     _luxCalcExp = exp;
 }
@@ -57,11 +57,11 @@ float DataCollector_LDR::readLux()
     int raw = readRaw();
 
     // calculate lux using res
-    double resistorVoltage, ldrVoltage, ldrResistance, ldrLux;
-    resistorVoltage = (float)raw / _maxAdc * _refVoltage;
-    ldrVoltage = _refVoltage - resistorVoltage;
-    ldrResistance = ldrVoltage / resistorVoltage * _res;
+    float resistorVoltage, ldrVoltage, ldrResistance, ldrLux;
+    resistorVoltage = (_refVoltage / _maxAdc) * raw;
+    ldrResistance = (_refVoltage / resistorVoltage - 1)* _res;
     ldrLux = _luxCalcScalar * pow(ldrResistance, _luxCalcExp);
+
     return ldrLux;
 }
 

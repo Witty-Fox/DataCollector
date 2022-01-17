@@ -10,11 +10,11 @@ class DataCollector_LDR : public DataCollector_base
 {
 public:
     void begin(int pin, int res = DEFAULT_LDR_RES_VALUE);
-    void begin(int pin, int res, int maxAdc, int voltage, int scalar, int exp);
+    void begin(int pin, int res, int maxAdc, int voltage, float scalar, float exp);
     void setMaxAdc(int maxAdc);
     void setRefVoltage(int voltage);
-    void setLuxCalcScalar(int scalar);
-    void setLuxCalcExp(int exp);
+    void setLuxCalcScalar(float scalar);
+    void setLuxCalcExp(float exp);
     int readRaw();
     float readLux();
     void setPublishMode(LightFormat format);
@@ -25,9 +25,9 @@ private:
     int _pin;
     int _res;
     int _maxAdc;
-    int _refVoltage;
-    int _luxCalcScalar;
-    int _luxCalcExp;
+    float _refVoltage;
+    float _luxCalcScalar;
+    float _luxCalcExp;
     LightFormat _publishFormat;
 };
 

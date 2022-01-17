@@ -4,18 +4,25 @@ void DataCollector_Thermistor::begin(int pin, int res)
 {
     pinMode(pin, INPUT);
     _pin = pin;
+    _thermistorOffset = DEFAULT_THERM_OFFSET;
     _res = res;
     _maxAdc = DEFAULT_MAX_ADC_VALUE;
     _refVoltage = DEFAULT_MAX_VOLTAGE_VALUE;
 }
 
-void DataCollector_Thermistor::begin(int pin, int res, int maxAdc, int voltage)
+void DataCollector_Thermistor::begin(int pin, float thermistorOffset, int res, int maxAdc, float voltage)
 {
     pinMode(pin, INPUT);
     _pin = pin;
+    _thermistorOffset = thermistorOffset;
     _res = res;
     _maxAdc = maxAdc;
     _refVoltage = voltage;
+}
+
+void DataCollector_Thermistor::setThermistorOffset(float offset)
+{
+    _thermistorOffset = offset;
 }
 
 void DataCollector_Thermistor::setMaxAdc(int adc)
@@ -23,7 +30,7 @@ void DataCollector_Thermistor::setMaxAdc(int adc)
     _maxAdc = adc;
 }
 
-void DataCollector_Thermistor::setRefVoltage(int voltage)
+void DataCollector_Thermistor::setRefVoltage(float voltage)
 {
     _refVoltage = voltage;
 }
@@ -47,12 +54,12 @@ float DataCollector_Thermistor::readTemperature()
     }
 
     // calculating temperature using res
-    double output_voltage, thermistor_resistance, therm_res_ln, temperature;
-    output_voltage = ((raw * _refVoltage) / _maxAdc);
-    thermistor_resistance = ((5 * (10.0 / output_voltage)) - 10) * 1000; /* Resistance in ohms */
+    float output_voltage, thermistor_resistance, therm_res_ln, temperature;
+    output_voltage = raw;
+    thermistor_resistance = _res * (4096.0 / (float)output_voltage - 1.0);                                                                  /* Resistance in ohms */
     therm_res_ln = log(thermistor_resistance);
-    temperature = (1 / (0.001129148 + (0.000234125 * therm_res_ln) + (0.0000000876741 * therm_res_ln * therm_res_ln * therm_res_ln))); /* Temperature in Kelvin */
-    float temp_cel = temperature - 273.15;                                                                                             /* Temperature in degree Celsius */
+    temperature =  (1.0 / (_thermistorOffset + (2.378405444e-04*therm_res_ln) + (2.019202697e-07*therm_res_ln*therm_res_ln*therm_res_ln))); /* Temperature in Kelvin */
+    float temp_cel = temperature - 273.15;                                                                                                  /* Temperature in degree Celsius */
 
     return (_temperatureFormat == TEMP_C) ? temp_cel : cToF(temp_cel);
 }

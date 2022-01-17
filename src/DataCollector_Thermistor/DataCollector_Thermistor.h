@@ -10,9 +10,10 @@ class DataCollector_Thermistor : public DataCollector_base
 {
 public:
     void begin(int pin, int res = DEFAULT_THERM_RES_VALUE);
-    void begin(int pin, int res, int maxAdc, int voltage);
+    void begin(int pin, float thermistorOffset, int res, int maxAdc, float voltage);
+    void setThermistorOffset(float offset);
     void setMaxAdc(int maxAdc);
-    void setRefVoltage(int voltage);
+    void setRefVoltage(float voltage);
     int readRaw();
     float readTemperature();
     void setTemperatureFormat(TemperatureFormat format);
@@ -22,8 +23,9 @@ public:
 private:
     int _pin;
     int _res;
+    float _thermistorOffset;
     int _maxAdc;
-    int _refVoltage;
+    float _refVoltage;
     TemperatureFormat _temperatureFormat = TEMP_RAW;
 };
 
